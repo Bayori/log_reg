@@ -64,9 +64,9 @@ namespace log_reg
             // 1 - Пароль введен неверно
             // 2 - Успешная авторизация
 
-            string[] data;
             using (StreamReader sr = new StreamReader(path)) // Вносим каждую строчку в словарь, предварительно поделив ключ и значение через ':'
             {
+                string[] data;
                 while (!sr.EndOfStream)
                 {
                     data = sr.ReadLine().Split(':');
@@ -98,6 +98,7 @@ namespace log_reg
             {
                 Console.WriteLine("Регистрация...");
                 register(credentials);
+
             }
         }
     }
