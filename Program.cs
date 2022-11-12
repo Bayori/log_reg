@@ -6,6 +6,10 @@ namespace log_reg
 {
     internal class Program
     {
+        public static string path = @"C:\Users\super\OneDrive\Desktop\usernames\usernames.txt";
+        public static Dictionary<string, string> credentials = new Dictionary<string, string>();
+
+
         static int auth(string login, string password, Dictionary<string, string> credentials)
         {
             if (credentials.ContainsKey(login)) // Проверяем ключ+значение в словаре 
@@ -21,7 +25,7 @@ namespace log_reg
             }
             else return 0;
         }
-        static void register(string path, Dictionary<string, string> credentials)
+        static void register(Dictionary<string, string> credentials)
         {
             Console.WriteLine("Введите логин: ");
             string userLogin = Console.ReadLine();
@@ -60,9 +64,6 @@ namespace log_reg
             // 1 - Пароль введен неверно
             // 2 - Успешная авторизация
 
-            string path = @"C:\Users\super\OneDrive\Desktop\usernames\usernames.txt"; // Путь к файлу
-
-            Dictionary<string, string> credentials = new Dictionary<string, string>(); // Создаём словарь
             string[] data;
             using (StreamReader sr = new StreamReader(path)) // Вносим каждую строчку в словарь, предварительно поделив ключ и значение через ':'
             {
@@ -79,25 +80,25 @@ namespace log_reg
                 string login = Console.ReadLine();
                 Console.WriteLine("Введите пароль:");
                 string password = Console.ReadLine();
-                int code = auth(login, password, credentials);
-                if (code == 1)
-            {
-                Console.WriteLine("Пароль неверный [0 - для регистрации, 1 - для повторного ввода]");
-                menuLogin = Convert.ToInt32(Console.ReadLine());
-            }
-                else if (code == 0)
-            {
-                Console.WriteLine("Логина не существует [0 - для регистрации, 1 - для повторного ввода]");
-                menuLogin = Convert.ToInt32(Console.ReadLine());
-            }
-          
+                int loginResultCode = auth(login, password, credentials);
+                if (loginResultCode == 1)
+                {
+                    Console.WriteLine("Пароль неверный [0 - для регистрации, 1 - для повторного ввода]");
+                    menuLogin = Convert.ToInt32(Console.ReadLine());
+                }
+                else if (loginResultCode == 0)
+                {
+                    Console.WriteLine("Логина не существует [0 - для регистрации, 1 - для повторного ввода]");
+                    menuLogin = Convert.ToInt32(Console.ReadLine());
+                }
+
             } while (menuLogin == 1);
 
             if (menuLogin == 0)
-                {
-                    Console.WriteLine("Регистрация...");
-                register(path, credentials);
-                } 
+            {
+                Console.WriteLine("Регистрация...");
+                register(credentials);
+            }
         }
     }
 }
