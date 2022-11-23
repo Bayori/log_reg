@@ -2,30 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using log_regExceptions;
 
 namespace log_reg
 {
-    class UserDoesNotExistsException : Exception // Пользователя не существует
-    {
-        public UserDoesNotExistsException(string message) : base(message) { }
-    }
-    class IncorrectPasswordException : Exception // Пароль неверный
-    {
-        public IncorrectPasswordException(string message) : base(message) { }
-    }
-    class PasswordConfirmMismatchException : Exception // Пароли не совпадают
-    {
-        public PasswordConfirmMismatchException(string message) : base(message) { }
-    }
-    class UserAlreadeExistException : Exception // Пользователь существует
-    {
-        public UserAlreadeExistException(string message) : base(message) { }
-    }
-    class IncorrectLoginException : Exception // Логин некорректный
-    {
-        public IncorrectLoginException(string message) : base(message) { }
-    }
-
     internal class Program
     {
         public static string path = @"C:\Users\super\OneDrive\Desktop\usernames\usernames.txt";
