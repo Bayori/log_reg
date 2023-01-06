@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using AuthExceptions;
-
+using Properties;
 namespace log_reg
 {
     internal class Program
     {
-        public static string path = @"C:\Users\super\OneDrive\Desktop\usernames\usernames.txt";
+        User user = new User();
+        public static string path = @"C:\Users\юрка\Desktop\usernames\usernames.txt";
         public static Dictionary<string, string> credentials = new Dictionary<string, string>();
 
         static int auth(string login, string password, Dictionary<string, string> credentials)
@@ -28,20 +29,23 @@ namespace log_reg
         }
         static void register(Dictionary<string, string> credentials)
         {
+            User user = new User();
+
             Console.WriteLine("Введите логин: ");
-            string userLogin = Console.ReadLine();
-            if (!isValidLogin(userLogin))
+            string login = Console.ReadLine();
+            user.propLogin = login;
+            if (string.IsNullOrEmpty(user.propLogin))
             {
                 throw new IncorrectLoginException("Логин введён некорректно");
             }
-            if (credentials.ContainsKey(userLogin))
+            if (credentials.ContainsKey(user.propLogin))
             {
                 throw new UserAlreadeExistException("Пользователь уже существует");
             }
 
             Console.WriteLine("Введите пароль: ");
-            string userPassword = Console.ReadLine();
-            if (!isValidPassword(userPassword))
+            user.propPassword = Console.ReadLine();
+            if (string.IsNullOrEmpty(user.propPassword))
             {
                 throw new IncorrectPasswordException("Пароль введён некорректно");
             }
@@ -49,52 +53,21 @@ namespace log_reg
             Console.WriteLine("Введите пароль ещё раз: ");
             string userPasswordConfrim = Console.ReadLine();
 
-            if (userPasswordConfrim != userPassword)
+            if (userPasswordConfrim != user.propPassword)
             {
                 throw new PasswordConfirmMismatchException("Пароли не совпадают");
             }
             using (StreamWriter vf = new StreamWriter(path, true)) // Путь до файла
             {
-                vf.WriteLine("{0}:{1}", userLogin, userPasswordConfrim); // Добавление строки в файл
+                vf.WriteLine("{0}:{1}", user.propLogin, userPasswordConfrim); // Добавление строки в файл
             }
             Console.WriteLine("Успешная регистрация");
             return;
         }
 
-        static bool isValidLogin(string login)
-        {
-
-            if (login.Length < 6 || login.Length > 20) // Длина строки
-            {
-                return false;
-            }
-
-            if (Regex.IsMatch(login, "[A-Z ]")) // Если есть заглавные буквы или пробелы
-            {
-                return false;
-            }
-            return true;
-        }
-
-        static bool isValidPassword(string password)
-        {
-            if (password.Length < 6 || password.Length > 20) // Длина строки
-            {
-                return false;
-            }
-            if (Regex.IsMatch(password, " ")) // Проверка на пробел.ы
-            {
-                return false;
-            }
-            if (!Regex.IsMatch(password, "[A-Z]")) // Проверка на верхний регистр
-            {
-                return false;
-            }
-            return true;
-        }
-
         static void Main(string[] args)
         {
+            User user = new User();
             // Коды:
             // 0 - Логина не существует
             // 1 - Пароль введен неверно
@@ -117,8 +90,10 @@ namespace log_reg
                 {
                     Console.WriteLine("Введите логин:");
                     string login = Console.ReadLine();
+
                     Console.WriteLine("Введите пароль:");
                     string password = Console.ReadLine();
+
                     int loginResultCode = auth(login, password, credentials);
                 }
                 catch (UserDoesNotExistsException ex)
@@ -143,6 +118,7 @@ namespace log_reg
                     try
                     {
                         register(credentials);
+                        return;
                     }
                     catch (UserAlreadeExistException ex)
                     {
